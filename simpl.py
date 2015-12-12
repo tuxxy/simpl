@@ -112,9 +112,11 @@ class Locker:
 
     def _decrypt_into_bank(self, ciphertext, IV):
         cipher = AES.new(self.key, AES.MODE_CFB, IV)
-        for entry in json.loads(cipher.decrypt(ciphertext).decode('utf8')):
-            self.bank[entry['account']] = {'username': entry['username'],
-                'password': entry['password'], 'comment': entry['comment']})
+        try:
+            self.bank = json.loads(cipher.decrypt(ciphertext).decode('utf8'))
+        except ValueError as e:
+            print("Simpl could not read the locker data. Perhaps you used an invalid key?")
+            sys.exit()
 
     def _encrypt_to_file(self):
         """ This is called after ever modification to the locker. """
