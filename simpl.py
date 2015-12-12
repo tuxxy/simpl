@@ -22,8 +22,8 @@ class CLI:
         print("Developer Twitter: https://twitter.com/__tux")
         print("Read the README for information on how to use this software.\n\n\n")
 
-    def get_input(self, precise=False):
-        data = input(">> ")
+    def get_input(self, prompt=">> ", precise=False):
+        data = input(prompt)
         # If the data is precise, do not standardize it.
         if not precise:
             data = data.lower()
