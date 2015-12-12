@@ -67,7 +67,7 @@ class Locker:
                 ciphertext = data[AES.block_size:]
                 self._decrypt_into_bank(ciphertext, IV)
 
-    def add(self, account, username, password, comment=None):
+    def add(self, account, username, password, comment=''):
         if not account in self.bank.keys():
             self.bank[account] = {'username': username, 'password': password,
                 'comment': comment}
