@@ -6,6 +6,7 @@ from getpass import getpass
 
 from Crypto.Cipher import AES
 from Crypto import Random
+from hashlib import sha256
 
 from termcolor import colored
 
@@ -47,7 +48,7 @@ class Locker:
     
     def __init__(self, data, key):
         """ Takes encrypted locker data from ~/.simpl and initializes a Locker. """
-        self.key = key
+        self.key = sha256(key).digest()
         data_size = len(data)
         if data_size >= AES.block_size:
             IV = data[0:AES.block_size]
