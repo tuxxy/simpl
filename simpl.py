@@ -7,6 +7,8 @@ from getpass import getpass
 from Crypto.Cipher import AES
 from Crypto import Random
 
+from termcolor import colored
+
 # File path for the locker file
 SIMPL_PATH = os.path.expanduser('~')+'/.simpl'
 
@@ -53,11 +55,61 @@ class Locker:
                 ciphertext = data[AES.block_size:]
                 _decrypt_into_bank(ciphertext, IV)
 
-    def add(account_name, username, password, comment=None):
-        self.bank.append({account_name: [username, password, comment]})
-        _encrypt_to_file()
+    def add(account, username, password, comment=None):
+        if not account in self.bank.keys():
+            self.bank[account] = {'username': username, 'password': password,
+                'comment': comment}
+            _encrypt_to_file()
+        else:
+            # TODO Handle this error
+            raise KeyError('Account already exists!')
 
-                
+    def update(account, username=None, password=None, comment=None):
+        """ Updates the current entry for account. """
+        if account in self.bank.keys():
+            if username:
+                self.bank[account]['username'] = username
+            if password:
+                self.bank[account]['password'] = password
+            if comment:
+                self.bank[account]['comment'] = comment
+            _encrypt_to_file()
+        else:
+            # TODO Handle this error
+            raise KeyError('Account doesn\'t exist!')
+
+    def delete(self, account):
+        """ Deletes entry from locker. """
+        if account in self.bank.keys():
+            del self.bank[account]
+            _encrypt_to_file()
+        else:
+            raise KeyError('Account doesn\'t exist!')
+
+    def list(self):
+        """ Lists all accounts. """
+        for account in self.bank.keys():
+            print("{}\nComment:\n\"{}\"\n".format(account, self.bank[account]['comment']))
+
+    def query(self, term):
+        """ Searches for occurances of the term in the bank. """
+        entries = []
+        for account in self.bank.keys():
+            if term in account:
+                entries.append(account)
+            elif term in self.bank[account]['username']:
+                entries.append(account)
+            elif term in self.bank[account]['comment']:
+                entries.append(account)
+        for account in entries:
+            acct = colored(account, 'white')
+            username = colored(self.bank[account]['username'], 'green')
+            password = colored(self.bank[account]['password'], 'yellow',on_color='on_yellow')
+            comment = colored(self.bank[account]['comment'], 'grey')
+            print("Account: {}\nUsername: {}\nPassword: {}\nComment:\n{}\n\n\n".format(acct, username, password, comment))
+        if entries == []:
+            print("No occurances of '{}' found in the locker.\n\n".format(term))
+
     def _decrypt_into_bank(self, ciphertext, IV):
         cipher = AES.new(self.key, AES.MODE_CFB, IV)
         for entry in json.loads(cipher.decrypt(ciphertext).decode('utf8')):
