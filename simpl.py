@@ -41,7 +41,7 @@ class CLI:
 class Locker:
     """ This class acts as the data structure to store passwords. """
     key = None
-    bank = []
+    bank = {}
     
     def __init__(self, data, key):
         """ Takes encrypted locker data from ~/.simpl and initializes a Locker. """
@@ -61,7 +61,7 @@ class Locker:
     def _decrypt_into_bank(self, ciphertext, IV):
         cipher = AES.new(self.key, AES.MODE_CFB, IV)
         for entry in json.loads(cipher.decrypt(ciphertext).decode('utf8')):
-            self.bank.append(entry['account']: {'username': entry['username'],
+            self.bank[entry['account']] = {'username': entry['username'],
                 'password': entry['password'], 'comment': entry['comment']})
 
     def _encrypt_to_file(self):
