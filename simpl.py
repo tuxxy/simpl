@@ -72,12 +72,10 @@ class Locker:
 class Simpl:
     """ Main Simpl class. """
 
-    cli = None
+    cli = CLI()
     locker = None
 
     def __init__(self):
-        self.cli = CLI()
-
         if not os.path.isfile(SIMPL_PATH):
             self._create_simpl_file()
             self._init_new_locker()
