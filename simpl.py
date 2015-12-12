@@ -155,6 +155,8 @@ class Simpl:
             terms = self.cli.get_input().split()
             if terms[0] in ['add', 'touch', 'new', 'create']:
                 self._add_entry(terms)
+            elif terms[0] in ['update', 'mod', 'modify', 'change']:
+                self._update_entry(terms)
             elif terms[0] in ['list', 'ls', 'dir']:
                 self.locker.list()
             else:
@@ -176,6 +178,53 @@ class Simpl:
                 self.locker.add(account, username, password, comment)
             except KeyError as e:
                 print("\n\nThis account already exists. Try an update.")
+
+    def _update_entry(self, terms):
+        username, password, comment = None, None, None
+        try:
+            # update <account>
+            account = terms[1]
+        except IndexError:
+            # update
+            account = self.cli.get_input('\n\nEnter Account to update: ')
+        finally:
+            try:
+                # update <account> <key>=<value> <key>=<value> <key>
+                phrases = terms[2:]
+                for phrase in phrases:
+                    try:
+                        # <key>=<value>
+                        key, value = phrase.split('=')
+                        if key == 'username':
+                            username = value
+                        elif key == 'password':
+                            password = value
+                        elif key == 'comment':
+                            # TODO There is a bug here w/ the spaces in comments
+                            # How to determine end of comment?
+                            comment = value
+                    except ValueError:
+                        # <key>
+                        if phrase == 'password':
+                            password = self.cli.sensitive_input('\n\nEnter the Password: ')
+                        elif phrase == 'username':
+                            username = self.cli.get_input('\n\nEnter the Username: ', precise=True)
+                        elif phrase == 'comment':
+                            comment = self.cli.get_input('\n\nEnter Comment: ', precise=True)
+                        else:
+                            self.cli.ret_error(error='\n\nNo such attribute \'{}\''.format(phrase))
+            except IndexError:
+                username = self.cli.get_input('\n\nEnter the Username: ', precise=True)
+                password = self.cli.sensitive_input('Enter the Password: ')
+                comment = self.cli.get_input('Enter Comment: ', precise=True)
+            finally:
+                try:
+                    self.locker.update(account, username, password, comment=comment)
+                except KeyError:
+                    print("There is no account '{}'. Create it? (YES/no)")
+                    if self.cli.YES_no_prompt():
+                        self.locker.add(account, username, password, comment)
+
 
     def _create_simpl_file(self):
         print("No simpl locker file found. Would you like to create one? (YES/no)")
