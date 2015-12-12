@@ -82,7 +82,7 @@ class Locker:
         """ Deletes entry from locker. """
         if account in self.bank.keys():
             del self.bank[account]
-            _encrypt_to_file()
+            self._encrypt_to_file()
         else:
             raise KeyError('Account doesn\'t exist!')
 
