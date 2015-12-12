@@ -38,6 +38,17 @@ class CLI:
             data = data.lower()
         return data
 
+    def YES_no_prompt(self):
+        choice = None
+        while choice not in ['', 'y', 'yes', 'n', 'no']:
+            choice = self.get_input()
+            if choice == '' or choice == 'y' or choice == 'yes':
+                return True
+            elif choice == 'n' or choice == 'no':
+                return False
+            else:
+                self.ret_error()
+
     def ret_error(self, error="Input was invalid - try again."):
         print(error)
 
