@@ -52,6 +52,11 @@ class Locker:
             if data_size > AES.block_size:
                 ciphertext = data[AES.block_size:]
                 _decrypt_into_bank(ciphertext, IV)
+
+    def add(account_name, username, password, comment=None):
+        self.bank.append({account_name: [username, password, comment]})
+        _encrypt_to_file()
+
                 
     def _decrypt_into_bank(self, ciphertext, IV):
         cipher = AES.new(self.key, AES.MODE_CFB, IV)
