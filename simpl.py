@@ -133,7 +133,6 @@ class Simpl:
     def __init__(self):
         if not os.path.isfile(SIMPL_PATH):
             self._create_simpl_file()
-            self._init_new_locker()
         else:
             with open(SIMPL_PATH, 'rb') as f:
                 self.locker = Locker(f.read(), self.cli.sensitive_input('Enter your key: ').encode('utf8'))
@@ -168,16 +167,16 @@ class Simpl:
             except KeyError as e:
                 print("\n\nThis account already exists. Try an update.")
 
-
     def _create_simpl_file(self):
         print("No simpl locker file found. Would you like to create one? (YES/no)")
         choice = None
         while choice not in ['', 'y', 'yes', 'n', 'no']:
             choice = self.cli.get_input()
             if choice == '' or choice == 'y' or choice == 'yes':
-                with open(SIMPL_PATH, 'x') as f:
-                    pass
-                print("\n\nsimpl locker file created!\n")
+                if self._init_new_locker():
+                    with open(SIMPL_PATH, 'x') as f:
+                        pass
+                print("\n\nsimpl locker file created!\n\n")
             elif choice == 'n' or choice == 'no': 
                 print("Not creating a simpl locker file. Halting!\n")
                 sys.exit()
