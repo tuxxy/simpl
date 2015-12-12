@@ -108,7 +108,16 @@ class Locker:
     def list(self):
         """ Lists all accounts. """
         for account in self.bank.keys():
-            print("Account: {}\nComment: {}\n".format(account,self.bank[account]['comment']))
+            comment = colored(self.bank[account]['comment'], 'blue')
+            print("Account: {}\nComment: {}\n".format(account,comment))
+
+    def cat(self, term):
+        """ Lists info for only the account it matches. """
+        if account in self.bank.keys():
+            username = colored(self.bank[account]['username'], 'green')
+            password = colored(self.bank[account]['password'], 'yellow',on_color='on_yellow')
+            comment = colored(self.bank[account]['comment'], 'blue')
+            print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}\n\n\n".format(account, username, password, comment))
 
     def query(self, term):
         """ Searches for occurances of the term in the bank. """
@@ -165,7 +174,7 @@ class Simpl:
         while is_running:
             terms = self.cli.get_input().split()
             if terms[0] in ['add', 'touch', 'new', 'create']:
-                self._add_entry(terms):
+                self._add_entry(terms)
             elif terms[0] in ['list', 'ls', 'dir']:
                 self.locker.list()
             elif terms[0] in ['delete', 'del', 'remove', 'rm']:
