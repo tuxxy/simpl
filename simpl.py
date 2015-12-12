@@ -122,7 +122,7 @@ class Locker:
         """ This is called after ever modification to the locker. """
         cipher = AES.new(self.key, AES.MODE_CFB, Random.new().read(AES.block_size))
         with open(SIMPL_PATH, 'wb') as f:
-            f.write(cipher.encrypt(cipher.IV+json.dumps(self.bank)))
+            f.write(cipher.encrypt(cipher.IV+json.dumps(self.bank).encode('utf8')))
         
 class Simpl:
     """ Main Simpl class. """
@@ -136,7 +136,38 @@ class Simpl:
             self._init_new_locker()
         else:
             with open(SIMPL_PATH, 'rb') as f:
-                locker = Locker(f.read(), self.cli.sensitive_input('Enter your key: '))
+                self.locker = Locker(f.read(), self.cli.sensitive_input('Enter your key: ').encode('utf8'))
+
+    def loop(self):
+        """ Main loop for interface. """
+        # TODO Handle ctrl-c, etc
+        is_running = True
+        while is_running:
+            terms = self.cli.get_input().split()
+            if terms[0] == 'add':
+                self._add_phrase(terms)
+            elif terms[0] == 'list' or terms[0] == 'ls':
+                self.locker.list()
+            else:
+                self.locker.query(''.join(terms))
+
+    def _add_phrase(self, terms):
+        try:
+            account = terms[1]
+        except IndexError:
+            account = self.cli.get_input('\n\nEnter the Account name: ')
+        try:
+            username = terms[2]
+        except IndexError:
+            username = self.cli.get_input('Enter the Username: ', precise=True)
+        finally:
+            password = self.cli.sensitive_input('Enter the Password: ')
+            comment = self.cli.get_input("Enter comment: ", precise=True)
+            try:
+                self.locker.add(account, username, password, comment)
+            except KeyError as e:
+                print("\n\nThis account already exists. Try an update.")
+
 
     def _create_simpl_file(self):
         print("No simpl locker file found. Would you like to create one? (YES/no)")
@@ -160,11 +191,12 @@ class Simpl:
         key = self.cli.sensitive_input('Enter your key: ')
         key_verify = self.cli.sensitive_input('Verify your key: ')
         while key != key_verify:
+            print("The keys didn't match, try again.\n\n")
             key = self.cli.sensitive_input('Enter your key: ')
             key_verify = self.cli.sensitive_input('Verify your key: ')
         # sanity check the keys
         if key == key_verify:
-            self.locker = Locker(Random.new().read(AES.block_size), key)
+            self.locker = Locker(Random.new().read(AES.block_size), key.encode('utf8'))
             return True
         else:
             # Should never happen, but safety first!
@@ -173,3 +205,4 @@ class Simpl:
 if __name__ == '__main__':
     # Instantiate main application handler class
     app = Simpl()
+    app.loop()
