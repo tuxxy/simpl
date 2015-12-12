@@ -12,7 +12,7 @@ I have developed simpl to learn more about cryptography and its practical applic
 If you want to contribute, please keep in mind that your additions must stay within the realm of "Simple and Lightweight".
 
 # Security Limitations
-If you read the [Cryptography Library's](https://cryptography.io/en/latest/) documentaion, you will see the following warning:
+If you read the [Cryptography Library's documentation](https://cryptography.io/en/latest/), you will see the following warning:
 
 > Memory wiping is used to protect secret data or key material from attackers with access to uninitialized memory. This can be either because the attacker has some kind of local user access or because of how other software uses uninitialized memory.
 
