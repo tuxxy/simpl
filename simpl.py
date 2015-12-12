@@ -86,7 +86,6 @@ class Locker:
                 self.bank[account]['comment'] = comment
             self._encrypt_to_file()
         else:
-            # TODO Handle this error
             raise KeyError('Account doesn\'t exist!')
 
     def delete(self, account):
