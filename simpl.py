@@ -38,24 +38,10 @@ class CLI:
     def ret_error(self, error="Input was invalid - try again."):
         print(error)
 
-class Entry:
-    """ This data structure contains the secured info. """
-
-    account = None  # A queryable term (and name) to organize passwords.
-    comment = None  # A comment on the account.
-    username = None
-    password = None
-
-    def __init__(self, account, username, password, comment=None):
-        self.account = account
-        self.username = username
-        self.password = password
-        self.comment = comment
-
 class Locker:
     """ This class acts as the data structure to store passwords. """
     key = None
-    bank = None
+    bank = []
     
     def __init__(self, data, key):
         """ Takes encrypted locker data from ~/.simpl and initializes a Locker. """
