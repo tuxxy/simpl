@@ -78,6 +78,7 @@ class Locker:
             self.bank[account] = {'username': username, 'password': password,
                 'comment': comment}
             self._encrypt_to_file()
+            return True
         else:
             raise KeyError('Account already exists!')
 
@@ -91,6 +92,7 @@ class Locker:
             if comment:
                 self.bank[account]['comment'] = comment
             self._encrypt_to_file()
+            return True
         else:
             raise KeyError('Account doesn\'t exist!')
 
@@ -99,6 +101,7 @@ class Locker:
         if account in self.bank.keys():
             del self.bank[account]
             self._encrypt_to_file()
+            return True
         else:
             raise KeyError('Account doesn\'t exist!')
 
@@ -123,8 +126,10 @@ class Locker:
             password = colored(self.bank[account]['password'], 'yellow',on_color='on_yellow')
             comment = colored(self.bank[account]['comment'], 'blue')
             print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}\n\n\n".format(acct, username, password, comment))
+            return True
         if entries == []:
             print("No occurances of '{}' found in the locker.\n\n".format(term))
+            return False
 
     def _decrypt_into_bank(self, ciphertext, IV):
         cipher = AES.new(self.key, AES.MODE_CFB, IV)
