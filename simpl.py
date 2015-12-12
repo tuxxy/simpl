@@ -174,7 +174,10 @@ class Simpl:
         is_running = True
         while is_running:
             terms = self.cli.get_input().split()
-            if terms[0] in ['add', 'touch', 'new', 'create']:
+            if terms == []:
+                # Do nothing, just reloop again
+                pass
+            elif terms[0] in ['add', 'touch', 'new', 'create']:
                 self._add_entry(terms)
             elif terms[0] in ['cat', 'type']:
                 self._cat_entry(terms)
