@@ -165,11 +165,13 @@ class Simpl:
         while is_running:
             terms = self.cli.get_input().split()
             if terms[0] in ['add', 'touch', 'new', 'create']:
-                self._add_entry(terms)
-            elif terms[0] in ['update', 'mod', 'modify', 'change']:
-                self._update_entry(terms)
+                self._add_entry(terms):
             elif terms[0] in ['list', 'ls', 'dir']:
                 self.locker.list()
+            elif terms[0] in ['delete', 'del', 'remove', 'rm']:
+                self._del_entry(terms)
+            elif terms[0] in ['update', 'mod', 'modify', 'change']:
+                self._update_entry(terms)
             else:
                 self.locker.query(''.join(terms))
 
@@ -186,9 +188,24 @@ class Simpl:
             password = self.cli.sensitive_input('Enter the Password: ')
             comment = self.cli.get_input("Enter comment: ", precise=True)
             try:
-                self.locker.add(account, username, password, comment)
-            except KeyError as e:
+                if self.locker.add(account, username, password, comment):
+                    self.cli.query_OK()
+                else:
+                    self.cli.query_FAIL()
+            except KeyError:
                 print("\n\nThis account already exists. Try an update.")
+
+    def _del_entry(self, terms):
+        try:
+            account = terms[1]
+        except IndexError:
+            account = self.cli.get_input("Enter the Account name: ")
+        finally:
+            try:
+                if self.locker.delete(account):
+                    self.cli.query_OK()
+            except KeyError:
+                print("No account found for '{}'\n\n".format(account))
 
     def _update_entry(self, terms):
         username, password, comment = None, None, None
@@ -201,6 +218,7 @@ class Simpl:
         finally:
             try:
                 # update <account> <key>=<value> <key>=<value> <key>
+                # Implement this better with, pehaps, map-like features.
                 phrases = terms[2:]
                 for phrase in phrases:
                     try:
@@ -230,12 +248,15 @@ class Simpl:
                 comment = self.cli.get_input('Enter Comment: ', precise=True)
             finally:
                 try:
-                    self.locker.update(account, username, password, comment=comment)
+                    if self.locker.update(account, username, password, comment=comment):
+                        self.cli.query_OK()
                 except KeyError:
                     print("There is no account '{}'. Create it? (YES/no)")
                     if self.cli.YES_no_prompt():
-                        self.locker.add(account, username, password, comment)
-
+                        if self.locker.add(account, username, password, comment):
+                            self.cli.query_OK()
+                        else:
+                            self.cli.query_FAIL()
 
     def _create_simpl_file(self):
         print("No simpl locker file found. Would you like to create one? (YES/no)")
