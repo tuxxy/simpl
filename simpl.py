@@ -120,7 +120,7 @@ class Locker:
             print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}\n\n\n".format(account, username, password, comment))
             return True
         else:
-            raise KeyError
+            raise KeyError('Account doesn\'t exist!')
 
     def query(self, term):
         """ Searches for occurances of the term in the bank. """
