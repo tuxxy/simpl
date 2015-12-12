@@ -143,14 +143,14 @@ class Simpl:
         is_running = True
         while is_running:
             terms = self.cli.get_input().split()
-            if terms[0] == 'add':
-                self._add_phrase(terms)
-            elif terms[0] == 'list' or terms[0] == 'ls':
+            if terms[0] in ['add', 'touch', 'new', 'create']:
+                self._add_entry(terms)
+            elif terms[0] in ['list', 'ls', 'dir']:
                 self.locker.list()
             else:
                 self.locker.query(''.join(terms))
 
-    def _add_phrase(self, terms):
+    def _add_entry(self, terms):
         try:
             account = terms[1]
         except IndexError:
