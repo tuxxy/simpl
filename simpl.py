@@ -111,7 +111,7 @@ class Locker:
             comment = colored(self.bank[account]['comment'], 'blue')
             print("Account: {}\nComment: {}\n".format(account,comment))
 
-    def cat(self, term):
+    def cat(self, account):
         """ Lists info for only the account it matches. """
         if account in self.bank.keys():
             username = colored(self.bank[account]['username'], 'green')
