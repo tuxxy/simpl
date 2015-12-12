@@ -17,10 +17,7 @@ class CLI:
     """ CLI is a class that acts as an interface (via cli) to the user. """
 
     def __init__(self):
-        print("simpl is a Security IMplied Password Locker written in Python3.5!")
-        print("Github: https://github.com/tuxxy/simpl/")
-        print("Developer Twitter: https://twitter.com/__tux")
-        print("Read the README for information on how to use this software.\n\n\n")
+        pass
 
     def get_input(self, prompt=">> ", precise=False):
         data = input(prompt)
@@ -316,5 +313,11 @@ class Simpl:
 
 if __name__ == '__main__':
     # Instantiate main application handler class
+    print("simpl is a Security IMplied Password Locker written in Python!")
+    print("Read the README for information on how to use this software.")
+    print(colored("Github: https://github.com/tuxxy/simpl/", 'green'))
+    print(colored("Developer Twitter: https://twitter.com/__tux", 'green'))
+    print("For a basic list of commands, type 'help'.\n\n\n")
+
     app = Simpl()
     app.loop()
