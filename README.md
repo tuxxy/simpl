@@ -14,8 +14,8 @@ If you want to contribute, please keep in mind that your additions must stay wit
 # Security Limitations
 If you read the [Cryptography Library's documentation](https://cryptography.io/en/latest/), you will see the following warning:
 
-> Memory wiping is used to protect secret data or key material from attackers with access to uninitialized memory. This can be either because the attacker has some kind of local user access or because of how other software uses uninitialized memory.
+> [Memory wiping](https://blogs.msdn.microsoft.com/oldnewthing/20130529-00/?p=4223/) is used to protect secret data or key material from attackers with access to uninitialized memory. This can be either because the attacker has some kind of local user access or because of how other software uses uninitialized memory.
 
-> Python exposes no API for us to implement this reliably and as such almost all software in Python is potentially vulnerable to this attack. The CERT secure coding guidelines assesses this issue as “Severity: medium, Likelihood: unlikely, Remediation Cost: expensive to repair” and we do not consider this a high risk for most users.
+> Python exposes no API for us to implement this reliably and as such almost all software in Python is potentially vulnerable to this attack. The [CERT secure coding guidelines](https://www.securecoding.cert.org/confluence/display/c/MEM03-C.+Clear+sensitive+information+stored+in+reusable+resources) assesses this issue as “Severity: medium, Likelihood: unlikely, Remediation Cost: expensive to repair” and we do not consider this a high risk for most users.
 
 I have included the above warning to showcase Python's shortcomings when it comes to cryptographic applications. Again, as stated above, use at your own risk.
