@@ -178,6 +178,8 @@ class Simpl:
             terms = self.cli.get_input().split()
             if terms[0] in ['add', 'touch', 'new', 'create']:
                 self._add_entry(terms)
+            elif terms[0] in ['cat', 'type']:
+                self._cat_entry(terms)
             elif terms[0] in ['list', 'ls', 'dir']:
                 self.locker.list()
             elif terms[0] in ['delete', 'del', 'remove', 'rm']:
@@ -185,7 +187,21 @@ class Simpl:
             elif terms[0] in ['update', 'mod', 'modify', 'change']:
                 self._update_entry(terms)
             else:
-                self.locker.query(''.join(terms))
+                if self.locker.query(''.join(terms)):
+                    self.cli.query_OK()
+                else:
+                    self.cli.query_FAIL()
+
+    def _cat_entry(self, terms):
+        try:
+            account = terms[1]
+        except IndexError:
+            account = self.cli.get_input('\n\nEnter the Account name: ')
+        finally:
+            if self.locker.cat(account):
+                self.cli.query_OK()
+            else:
+                self.cli.query_FAIL()
 
     def _add_entry(self, terms):
         try:
