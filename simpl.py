@@ -89,7 +89,7 @@ class Locker:
     def list(self):
         """ Lists all accounts. """
         for account in self.bank.keys():
-            print("{}\nComment:\n\"{}\"\n".format(account, self.bank[account]['comment']))
+            print("Account: {}\nComment: {}\n".format(account,self.bank[account]['comment']))
 
     def query(self, term):
         """ Searches for occurances of the term in the bank. """
@@ -105,8 +105,8 @@ class Locker:
             acct = colored(account, 'white')
             username = colored(self.bank[account]['username'], 'green')
             password = colored(self.bank[account]['password'], 'yellow',on_color='on_yellow')
-            comment = colored(self.bank[account]['comment'], 'grey')
-            print("Account: {}\nUsername: {}\nPassword: {}\nComment:\n{}\n\n\n".format(acct, username, password, comment))
+            comment = colored(self.bank[account]['comment'], 'blue')
+            print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}\n\n\n".format(acct, username, password, comment))
         if entries == []:
             print("No occurances of '{}' found in the locker.\n\n".format(term))
 
