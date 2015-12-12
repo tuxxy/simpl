@@ -38,8 +38,8 @@ class CLI:
     def ret_error(self, error="Input was invalid - try again."):
         print(error)
 
-class Password:
-    """ This data structure holds a password and its related data. """
+class Entry:
+    """ This data structure contains the secured info. """
 
     account = None  # A queryable term (and name) to organize passwords.
     comment = None  # A comment on the account.
