@@ -4,27 +4,11 @@ import sys
 import json
 from getpass import getpass
 
-class Password:
-    """ This data structure holds a password and its related data. """
+from Crypto.Cipher import AES
+from Crypto import Random
 
-    account = None  # A queryable term (and name) to organize passwords.
-    comment = None  # A comment on the account.
-    username = None
-    password = None
-
-    def __init__(self, account, username, password, comment=None):
-        self.account = account
-        self.username = username
-        self.password = password
-        self.comment = comment
-
-class Locker:
-    """ This class acts as the data structure to store passwords. """
-    last_auth = None
-    
-    def __init__(self, data):
-        """ Takes encrypted locker data from ~/.simpl and initializes a Locker. """
-
+# File path for the locker file
+SIMPL_PATH = os.path.expanduser('~')+'/.simpl'
 
 class CLI:
     """ CLI is a class that acts as an interface (via cli) to the user. """
@@ -54,39 +38,92 @@ class CLI:
     def ret_error(self, error="Input was invalid - try again."):
         print(error)
 
+class Password:
+    """ This data structure holds a password and its related data. """
+
+    account = None  # A queryable term (and name) to organize passwords.
+    comment = None  # A comment on the account.
+    username = None
+    password = None
+
+    def __init__(self, account, username, password, comment=None):
+        self.account = account
+        self.username = username
+        self.password = password
+        self.comment = comment
+
+class Locker:
+    """ This class acts as the data structure to store passwords. """
+    key = None
+    bank = None
+    
+    def __init__(self, data, key):
+        """ Takes encrypted locker data from ~/.simpl and initializes a Locker. """
+        self.key = key
+        data_size = len(data)
+        if data_size >= AES.block_size:
+            IV = data[0:AES.block_size]
+            if data_size > AES.block_size:
+                ciphertext = data[AES.block_size:]
+                _decrypt_into_bank(ciphertext, IV)
+                
+    def _decrypt_into_bank(self, ciphertext, IV):
+        cipher = AES.new(self.key, AES.MODE_CFB, IV)
+        self.bank = json.loads(cipher.decrypt(ciphertext).decode('utf8'))
+
+    def _encrypt_to_file(self):
+        """ This is called after ever modification to the locker. """
+        cipher = AES.new(self.key, AES.MODE_CFB, Random.new().read(AES.block_size))
+        with open(SIMPL_PATH, 'wb') as f:
+            f.write(cipher.encrypt(cipher.IV+json.dumps(self.bank)))
+        
 class Simpl:
     """ Main Simpl class. """
 
-    locker = None
     cli = None
-    simpl_file = None
+    locker = None
 
     def __init__(self):
-        cli = CLI()
-        simpl_file = os.path.expanduser('~')+'/.simpl'
+        self.cli = CLI()
 
-        # If a simpl locker file doesn't exist...
-        if not os.path.isfile(simpl_file):
-            print("No simpl locker file found. Would you like to create one? (YES/no)")
-            valid = False
-            while not valid:
-                choice = cli.get_input()
-                if choice == '' or choice == 'y' or choice == 'yes':
-                    valid = True
-                    with open(simpl_file, 'x') as f:
-                        pass
-                    print("\n\nsimpl locker file created!\n")
-                elif choice == 'n' or choice == 'no': 
-                    print("Not creating a simpl locker. Halting!\n")
-                    sys.exit()
-                else:
-                    cli.ret_error()
+        if not os.path.isfile(SIMPL_PATH):
+            self._create_simpl_file()
+            self._init_new_locker()
         else:
-            with open(simpl_file, 'r') as f:
-                data = f.read()
-            
+            with open(SIMPL_PATH, 'rb') as f:
+                locker = Locker(f.read(), self.cli.sensitive_input('Enter your key: '))
+
+    def _create_simpl_file(self):
+        print("No simpl locker file found. Would you like to create one? (YES/no)")
+        choice = None
+        while choice not in ['', 'y', 'yes', 'n', 'no']:
+            choice = self.cli.get_input()
+            if choice == '' or choice == 'y' or choice == 'yes':
+                with open(SIMPL_PATH, 'x') as f:
+                    pass
+                print("\n\nsimpl locker file created!\n")
+            elif choice == 'n' or choice == 'no': 
+                print("Not creating a simpl locker file. Halting!\n")
+                sys.exit()
+            else:
+                self.cli.ret_error()
 
 
+    def _init_new_locker(self):
+        """ Gets a passphrase from the user and creates a locker. """
+        print("simpl uses AES-256 encryption, but it still needs a strong passphrase to be secure.\nChoose something random and at least 50 bits of entropy.\n\n")
+        key = self.cli.sensitive_input('Enter your key: ')
+        key_verify = self.cli.sensitive_input('Verify your key: ')
+        while key != key_verify:
+            key = self.cli.sensitive_input('Enter your key: ')
+            key_verify = self.cli.sensitive_input('Verify your key: ')
+        # sanity check the keys
+        if key == key_verify:
+            self.locker = Locker(Random.new().read(AES.block_size), key)
+            return True
+        else:
+            # Should never happen, but safety first!
+            return False
 
 if __name__ == '__main__':
     # Instantiate main application handler class
