@@ -118,6 +118,9 @@ class Locker:
             password = colored(self.bank[account]['password'], 'yellow',on_color='on_yellow')
             comment = colored(self.bank[account]['comment'], 'blue')
             print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}\n\n\n".format(account, username, password, comment))
+            return True
+        else:
+            raise KeyError
 
     def query(self, term):
         """ Searches for occurances of the term in the bank. """
