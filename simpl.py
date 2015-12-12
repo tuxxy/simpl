@@ -228,20 +228,14 @@ class Simpl:
 
     def _create_simpl_file(self):
         print("No simpl locker file found. Would you like to create one? (YES/no)")
-        choice = None
-        while choice not in ['', 'y', 'yes', 'n', 'no']:
-            choice = self.cli.get_input()
-            if choice == '' or choice == 'y' or choice == 'yes':
-                if self._init_new_locker():
-                    with open(SIMPL_PATH, 'x') as f:
-                        pass
+        if self.cli.YES_no_prompt():
+            if self._init_new_locker():
+                with open(SIMPL_PATH, 'x') as f:
+                    pass
                 print("\n\nsimpl locker file created!\n\n")
-            elif choice == 'n' or choice == 'no': 
-                print("Not creating a simpl locker file. Halting!\n")
-                sys.exit()
-            else:
-                self.cli.ret_error()
-
+        else:
+            print("Not creating a simpl locker file. Halting!\n")
+            sys.exit()
 
     def _init_new_locker(self):
         """ Gets a passphrase from the user and creates a locker. """
