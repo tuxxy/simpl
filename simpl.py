@@ -49,6 +49,12 @@ class CLI:
             else:
                 self.ret_error()
 
+    def query_OK(self):
+       print(colored("+OK\n\n", 'green'))
+
+    def query_FAIL(self):
+        print(colored("+FAIL\n\n", 'red'))
+
     def ret_error(self, error="Input was invalid - try again."):
         print(error)
 
