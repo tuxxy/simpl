@@ -107,6 +107,7 @@ class Locker:
         for account in self.bank.keys():
             comment = colored(self.bank[account]['comment'], 'blue')
             print("Account: {}\nComment: {}\n".format(account,comment))
+        CLI().query_OK()
 
     def cat(self, account):
         """ Lists info for only the account it matches. """
