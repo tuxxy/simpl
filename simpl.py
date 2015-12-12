@@ -55,7 +55,8 @@ class Locker:
                 
     def _decrypt_into_bank(self, ciphertext, IV):
         cipher = AES.new(self.key, AES.MODE_CFB, IV)
-        self.bank = json.loads(cipher.decrypt(ciphertext).decode('utf8'))
+        for entry in json.loads(cipher.decrypt(ciphertext).decode('utf8')):
+            self.bank.append({entry['account']: [entry['username'], entry['password'], entry['comment']]})
 
     def _encrypt_to_file(self):
         """ This is called after ever modification to the locker. """
