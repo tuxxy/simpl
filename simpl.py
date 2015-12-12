@@ -47,10 +47,10 @@ class CLI:
                 self.ret_error()
 
     def query_OK(self):
-       print(colored("+OK\n\n", 'green'))
+       print(colored("+OK\n\n\n", 'green'))
 
     def query_FAIL(self):
-        print(colored("+FAIL\n\n", 'red'))
+        print(colored("+FAIL\n\n\n", 'red'))
 
     def ret_error(self, error="Input was invalid - try again."):
         print(error)
@@ -114,7 +114,7 @@ class Locker:
             username = colored(self.bank[account]['username'], 'green')
             password = colored(self.bank[account]['password'], 'yellow',on_color='on_yellow')
             comment = colored(self.bank[account]['comment'], 'blue')
-            print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}\n\n\n".format(account, username, password, comment))
+            print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}".format(account, username, password, comment))
             return True
         else:
             raise KeyError('Account doesn\'t exist!')
@@ -134,10 +134,10 @@ class Locker:
             username = colored(self.bank[account]['username'], 'green')
             password = colored(self.bank[account]['password'], 'yellow',on_color='on_yellow')
             comment = colored(self.bank[account]['comment'], 'blue')
-            print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}\n\n\n".format(acct, username, password, comment))
+            print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}".format(acct, username, password, comment))
             return True
         if entries == []:
-            print("No occurances of '{}' found in the locker.\n\n".format(term))
+            print("No occurances of '{}' found in the locker.".format(term))
             return False
 
     def _decrypt_into_bank(self, ciphertext, IV):
