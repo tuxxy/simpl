@@ -54,18 +54,17 @@ class Locker:
             IV = data[0:AES.block_size]
             if data_size > AES.block_size:
                 ciphertext = data[AES.block_size:]
-                _decrypt_into_bank(ciphertext, IV)
+                self._decrypt_into_bank(ciphertext, IV)
 
-    def add(account, username, password, comment=None):
+    def add(self, account, username, password, comment=None):
         if not account in self.bank.keys():
             self.bank[account] = {'username': username, 'password': password,
                 'comment': comment}
-            _encrypt_to_file()
+            self._encrypt_to_file()
         else:
-            # TODO Handle this error
             raise KeyError('Account already exists!')
 
-    def update(account, username=None, password=None, comment=None):
+    def update(self, account, username=None, password=None, comment=None):
         """ Updates the current entry for account. """
         if account in self.bank.keys():
             if username:
@@ -74,7 +73,7 @@ class Locker:
                 self.bank[account]['password'] = password
             if comment:
                 self.bank[account]['comment'] = comment
-            _encrypt_to_file()
+            self._encrypt_to_file()
         else:
             # TODO Handle this error
             raise KeyError('Account doesn\'t exist!')
