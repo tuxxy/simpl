@@ -57,11 +57,11 @@ class CLI:
 
     def disp_help(self):
         print("'help' - Displays this menu.")
-        print("'add [[account_name]&[username]]' - Adds entry to Locker.'")
+        print("'add [[account_name] [username]]' - Adds entry to Locker.'")
         print("'list' - Displays all the accounts and related comments in the Locker.")
         print("'cat [account_name]' - Displays all info from matching provided account.")
         print("'del [account_name]' - Deletes the entry matching the provided account.")
-        print("'update [account_name]&[[<attribute>=<value>],[<attribute>=<value>]]' - Updates matching entry from provided account name")
+        print("'update [account_name] [[<attribute>=<value>],[<attribute>=<value>]]' - Updates matching entry from provided account name")
         print("'<query>' - Any string that doesn't match the commands. Searches for all related accounts and returns all the info.\n\n\n")
 
 
