@@ -246,9 +246,8 @@ class Simpl:
             account = self.cli.get_input('\n\nEnter Account to update: ')
         finally:
             try:
-                # update <account> <key>=<value> <key>=<value> <key>
-                # Implement this better with, pehaps, map-like features.
-                phrases = terms[2:]
+                # update <account> <key>=<value>, <key>=<value>, <key>
+                phrases = ' '.join(terms[2:]).split(',')
                 for phrase in phrases:
                     try:
                         # <key>=<value>
@@ -258,8 +257,6 @@ class Simpl:
                         elif key == 'password':
                             password = value
                         elif key == 'comment':
-                            # TODO There is a bug here w/ the spaces in comments
-                            # How to determine end of comment?
                             comment = value
                     except ValueError:
                         # <key>
@@ -277,6 +274,7 @@ class Simpl:
                 comment = self.cli.get_input('Enter Comment: ', precise=True)
             finally:
                 try:
+                    # TODO If comment isn't alone in update query, it will always be None.
                     if self.locker.update(account, username, password, comment=comment):
                         self.cli.query_OK()
                 except KeyError:
