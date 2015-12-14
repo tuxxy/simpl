@@ -211,9 +211,13 @@ class Simpl:
         except IndexError:
             account = self.cli.get_input('\n\nEnter the Account name: ')
         finally:
-            if self.locker.cat(account):
-                self.cli.query_OK()
-            else:
+            try:
+                if self.locker.cat(account):
+                    self.cli.query_OK()
+                else:
+                    self.cli.query_FAIL()
+            except KeyError:
+                print("No such account '{}' found in locker.".format(account))
                 self.cli.query_FAIL()
 
     def _add_entry(self, terms):
