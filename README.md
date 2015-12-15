@@ -11,6 +11,8 @@ I have developed simpl to learn more about cryptography and its practical applic
 
 If you want to contribute, please keep in mind that your additions must stay within the realm of "Simple and Lightweight".
 
+simpl is released under the GPLv3! Please share it, fork it, whatever! 
+
 # Detailed Command List
 
 Simpl is made to be easy and quick. There is no GUI, it's all run in the command-line and the commands are really simple, and, for some, familiar.
