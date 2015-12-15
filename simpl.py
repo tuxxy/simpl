@@ -141,7 +141,9 @@ class Locker:
             print("No occurances of '{}' found in the locker.\n\n".format(term))
 
     def _decrypt_into_bank(self, ciphertext, IV):
-        cipher = AES.new(self.key, AES.MODE_CFB, IV)
+        cipher = AES.new(self.key, AES.MODE_CBC, IV)
+        # Remove the pad, as per PKCS#7, the byte is always the length of the pad.
+        ciphertext = ciphertext[0:-ciphertext[-1]]
         try:
             self.bank = json.loads(cipher.decrypt(ciphertext).decode('utf8'))
         except ValueError as e:
@@ -150,9 +152,17 @@ class Locker:
 
     def _encrypt_to_file(self):
         """ This is called after ever modification to the locker. """
-        cipher = AES.new(self.key, AES.MODE_CFB, Random.new().read(AES.block_size))
+        cipher = AES.new(self.key, AES.MODE_CBC, Random.new().read(AES.block_size))
         with open(SIMPL_PATH, 'wb') as f:
-            f.write(cipher.encrypt(cipher.IV+json.dumps(self.bank).encode('utf8')))
+            plain_text = json.dumps(self.bank).encode('utf8')
+            # Pad the data for AES CBC
+            pad_length = AES.block_size - (len(plain_text) % AES.block_size)
+            if pad_length == 0:
+                # Even if it doesn't need the pad, we still add it per PKCS#7
+                pad_length = AES.block_size
+            pad = pad_length.to_bytes(1, 'big') * pad_length
+            plain_text += pad
+            f.write(cipher.encrypt(cipher.IV+plain_text))
         
 class Simpl:
     """ Main Simpl class. """
