@@ -133,6 +133,7 @@ class Locker:
                 entries.append(account)
             elif term in self.bank[account]['comment']:
                 entries.append(account)
+        entries.sort()
         for account in entries:
             acct = colored(account, 'white')
             username = colored(self.bank[account]['username'], 'green')
