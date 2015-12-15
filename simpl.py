@@ -249,6 +249,7 @@ class Simpl:
                 # update <account> <key>=<value>, <key>=<value>, <key>
                 phrases = ' '.join(terms[2:]).split(',')
                 for phrase in phrases:
+                    phrase = phrase.strip()
                     try:
                         # <key>=<value>
                         key, value = phrase.split('=')
@@ -274,8 +275,7 @@ class Simpl:
                 comment = self.cli.get_input('Enter Comment: ', precise=True)
             finally:
                 try:
-                    # TODO If comment isn't alone in update query, it will always be None.
-                    self.locker.update(account, username, password, comment=comment)
+                    self.locker.update(account, username=username, password=password, comment=comment)
                 except KeyError:
                     print("There is no account '{}'. Create it? (YES/no)")
                     if self.cli.YES_no_prompt():
