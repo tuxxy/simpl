@@ -51,6 +51,7 @@ class CLI:
 
     def disp_help(self):
         print("'help' - Displays this menu.")
+        print("'exit' - Exits the program.")
         print("'add [[account_name] [username]]' - Adds entry to Locker.'")
         print("'list' - Displays all the accounts and related comments in the Locker.")
         print("'cat [account_name]' - Displays all info from matching provided account.")
