@@ -46,12 +46,6 @@ class CLI:
             else:
                 self.ret_error()
 
-    def query_OK(self):
-       print(colored("+OK\n\n\n", 'green'))
-
-    def query_FAIL(self):
-        print(colored("+FAIL\n\n\n", 'red'))
-
     def ret_error(self, error="Input was invalid - try again."):
         print(error)
 
@@ -117,7 +111,6 @@ class Locker:
         for account in self.bank.keys():
             comment = colored(self.bank[account]['comment'], 'blue')
             print("Account: {}\nComment: {}\n".format(account,comment))
-        CLI().query_OK()
 
     def cat(self, account):
         """ Lists info for only the account it matches. """
@@ -125,7 +118,7 @@ class Locker:
             username = colored(self.bank[account]['username'], 'green')
             password = colored(self.bank[account]['password'], 'yellow',on_color='on_yellow')
             comment = colored(self.bank[account]['comment'], 'blue')
-            print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}".format(account, username, password, comment))
+            print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}\n\n".format(account, username, password, comment))
             return True
         else:
             raise KeyError('Account doesn\'t exist!')
@@ -145,10 +138,10 @@ class Locker:
             username = colored(self.bank[account]['username'], 'green')
             password = colored(self.bank[account]['password'], 'yellow',on_color='on_yellow')
             comment = colored(self.bank[account]['comment'], 'blue')
-            print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}".format(acct, username, password, comment))
+            print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}\n\n".format(acct, username, password, comment))
             return True
         if entries == []:
-            print("No occurances of '{}' found in the locker.".format(term))
+            print("No occurances of '{}' found in the locker.\n\n".format(term))
             return False
 
     def _decrypt_into_bank(self, ciphertext, IV):
@@ -200,10 +193,7 @@ class Simpl:
             elif terms[0] in ['help', '?']:
                 self.cli.disp_help()
             else:
-                if self.locker.query(''.join(terms)):
-                    self.cli.query_OK()
-                else:
-                    self.cli.query_FAIL()
+                self.locker.query(''.join(terms))
 
     def _cat_entry(self, terms):
         try:
@@ -212,13 +202,9 @@ class Simpl:
             account = self.cli.get_input('\n\nEnter the Account name: ')
         finally:
             try:
-                if self.locker.cat(account):
-                    self.cli.query_OK()
-                else:
-                    self.cli.query_FAIL()
+                self.locker.cat(account)
             except KeyError:
-                print("No such account '{}' found in locker.".format(account))
-                self.cli.query_FAIL()
+                print("No such account '{}' found in locker.\n\n".format(account))
 
     def _add_entry(self, terms):
         try:
@@ -233,10 +219,7 @@ class Simpl:
             password = self.cli.sensitive_input('Enter the Password: ')
             comment = self.cli.get_input("Enter comment: ", precise=True)
             try:
-                if self.locker.add(account, username, password, comment):
-                    self.cli.query_OK()
-                else:
-                    self.cli.query_FAIL()
+                self.locker.add(account, username, password, comment)
             except KeyError:
                 print("\n\nThis account already exists. Try an update.")
 
@@ -247,8 +230,7 @@ class Simpl:
             account = self.cli.get_input("Enter the Account name: ")
         finally:
             try:
-                if self.locker.delete(account):
-                    self.cli.query_OK()
+                self.locker.delete(account)
             except KeyError:
                 print("No account found for '{}'\n\n".format(account))
 
@@ -291,15 +273,11 @@ class Simpl:
             finally:
                 try:
                     # TODO If comment isn't alone in update query, it will always be None.
-                    if self.locker.update(account, username, password, comment=comment):
-                        self.cli.query_OK()
+                    self.locker.update(account, username, password, comment=comment)
                 except KeyError:
                     print("There is no account '{}'. Create it? (YES/no)")
                     if self.cli.YES_no_prompt():
-                        if self.locker.add(account, username, password, comment):
-                            self.cli.query_OK()
-                        else:
-                            self.cli.query_FAIL()
+                        self.locker.add(account, username, password, comment)
 
     def _create_simpl_file(self):
         print("No simpl locker file found. Would you like to create one? (YES/no)")
