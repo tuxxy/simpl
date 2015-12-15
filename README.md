@@ -22,6 +22,7 @@ Simpl is made to be easy and quick. There is no GUI, it's all run in the command
 * `list|ls|dir` - Lists all accounts in Locker. Shows only account name and the comment, if available.
 * `delete|del|remove|rm [account name]` - Deletes entry from locker by account name.
 * `update|modify|mod|change <account name> <username>[=value, <comment>=<value>, <password>]` - Updates the entry using a very specific syntax. It requires an account name AND at least one attribute. You can specify the update by using an `=` followed by the value you want to set it to. You can specify multiple attributes by seperating them with a comma. This can be done in any order. NOTICE: Although, you can use this to update the password, it is not reccommended because it can be seen in plaintext. Instead, specify that you want to update the password by specifying the plain attribute `password`, and it will prompt you in a secure, non-echoing manner.
+* `<query>` - Anything that does not fit the above commands will act as a search on all the entries. If it finds the term you enter in an entry, it will display all the info from that entry.
 
 # Security Limitations
 If you read the [Cryptography Library's documentation](https://cryptography.io/en/latest/), you will see the following warning:
