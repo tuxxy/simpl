@@ -183,7 +183,7 @@ class Simpl:
         # TODO Handle ctrl-c, etc
         is_running = True
         while is_running:
-            terms = self.cli.get_input().split()
+            terms = self.cli.get_input(precise=False).split()
             if terms == []:
                 # Do nothing, just reloop again
                 pass
