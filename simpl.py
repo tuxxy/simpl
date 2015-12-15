@@ -245,42 +245,37 @@ class Simpl:
         except IndexError:
             # update
             account = self.cli.get_input('\n\nEnter Account to update: ')
-        finally:
+        # update <account> <key>=<value>, <key>=<value>, <key>
+        phrases = ' '.join(terms[2:]).split(',')
+        for phrase in phrases:
+            phrase = phrase.strip()
             try:
-                # update <account> <key>=<value>, <key>=<value>, <key>
-                phrases = ' '.join(terms[2:]).split(',')
-                for phrase in phrases:
-                    phrase = phrase.strip()
-                    try:
-                        # <key>=<value>
-                        key, value = phrase.split('=')
-                        if key == 'username':
-                            username = value
-                        elif key == 'password':
-                            password = value
-                        elif key == 'comment':
-                            comment = value
-                    except ValueError:
-                        # <key>
-                        if phrase == 'password':
-                            password = self.cli.sensitive_input('\n\nEnter the Password: ')
-                        elif phrase == 'username':
-                            username = self.cli.get_input('\n\nEnter the Username: ', precise=True)
-                        elif phrase == 'comment':
-                            comment = self.cli.get_input('\n\nEnter Comment: ', precise=True)
-                        else:
-                            self.cli.ret_error(error='\n\nNo such attribute \'{}\''.format(phrase))
-            except IndexError:
-                username = self.cli.get_input('\n\nEnter the Username: ', precise=True)
-                password = self.cli.sensitive_input('Enter the Password: ')
-                comment = self.cli.get_input('Enter Comment: ', precise=True)
-            finally:
-                try:
-                    self.locker.update(account, username=username, password=password, comment=comment)
-                except KeyError:
-                    print("There is no account '{}'. Create it? (YES/no)")
-                    if self.cli.YES_no_prompt():
-                        self.locker.add(account, username, password, comment)
+                # <key>=<value>
+                key, value = phrase.split('=')
+                if key == 'username':
+                    username = value
+                elif key == 'password':
+                    password = value
+                elif key == 'comment':
+                    comment = value
+            except ValueError:
+                # <key>
+                if phrase == 'password':
+                    password = self.cli.sensitive_input('\n\nEnter the Password: ')
+                elif phrase == 'username':
+                    username = self.cli.get_input('\n\nEnter the Username: ', precise=True)
+                elif phrase == 'comment':
+                    comment = self.cli.get_input('\n\nEnter Comment: ', precise=True)
+                elif not phrase:
+                    self.cli.ret_error(error='\n\n`update` requires an attribute to modify. See the README for more info.')
+                else:
+                    self.cli.ret_error(error='\n\nNo such attribute \'{}\''.format(phrase))
+        try:
+            self.locker.update(account, username=username, password=password, comment=comment)
+        except KeyError:
+            print("There is no account '{}'. Create it? (YES/no)")
+            if self.cli.YES_no_prompt():
+                self.locker.add(account, username, password, comment)
 
     def _create_simpl_file(self):
         print("No simpl locker file found. Would you like to create one? (YES/no)")
