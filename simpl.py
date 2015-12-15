@@ -139,10 +139,11 @@ class Locker:
             password = colored(self.bank[account]['password'], 'yellow',on_color='on_yellow')
             comment = colored(self.bank[account]['comment'], 'blue')
             print("Account: {}\nUsername: {}\nPassword: {}\nComment: {}\n\n".format(acct, username, password, comment))
-            return True
         if entries == []:
             print("No occurances of '{}' found in the locker.\n\n".format(term))
             return False
+        else:
+            return True
 
     def _decrypt_into_bank(self, ciphertext, IV):
         cipher = AES.new(self.key, AES.MODE_CFB, IV)
