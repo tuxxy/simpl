@@ -28,7 +28,7 @@ Simpl is made to be easy and quick. There is no GUI, it's all run in the command
 
 # FAQ
 
-* Q: Where is the Locker file stored? A: It's stored in your home directory as `.simpl`. Do not modify or change anything in the file. If you do, it will get corrupted and, if you cannot revert it, you will lose your information. This file is encrypted, so if you used a strong key, there is, theoretically, small to no chance that someone can recover this information. This makes it safe to backup elsewhere. 
+* Q: Where is the Locker file stored? A: It's stored in your home directory as `.simpl`. Do not modify or change anything in the file. If you do, it will get corrupted and, if you cannot revert it, you will lose your information. This file is encrypted, so if you used a strong key, there is, theoretically, little to no chance that someone can recover this information. This makes it safe to backup elsewhere. 
 * Q: Has Simpl been audited? A: No, it has not. However, I welcome anyone to audit it. Simpl uses the PyCrypto library which is pretty trustworthy, though.
 * Q: Does this work on Windows? A: I don't know. I haven't tested it on Windows, and, frankly, I don't want to. You're welcome to test it yourself and submit a pull request if neccessary.
 * Q: I forgot my password, is there a way to recover it? A: Nope, sorry. Implementing password recovery will undermine the strength and integrity of Simpl.
