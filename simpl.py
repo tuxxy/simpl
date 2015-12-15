@@ -142,10 +142,10 @@ class Locker:
 
     def _decrypt_into_bank(self, ciphertext, IV):
         cipher = AES.new(self.key, AES.MODE_CBC, IV)
-        # Remove the pad, as per PKCS#7, the byte is always the length of the pad.
-        ciphertext = ciphertext[0:-ciphertext[-1]]
         try:
-            self.bank = json.loads(cipher.decrypt(ciphertext).decode('utf8'))
+            self.bank = cipher.decrypt(ciphertext)
+            # Remove the pad, as per PKCS#7, the byte is always the length of the pad.
+            self.bank = json.loads(self.bank[0:-self.bank[-1]].decode('utf8'))
         except ValueError as e:
             print("Simpl could not read the locker data. Perhaps you used an invalid key?")
             sys.exit()
