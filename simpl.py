@@ -194,6 +194,8 @@ class Simpl:
                 self._update_entry(terms)
             elif terms[0] in ['help', '?']:
                 self.cli.disp_help()
+            elif terms[0] in ['exit', ':q', ':wq']:
+                sys.exit()
             else:
                 self.locker.query(''.join(terms))
 
