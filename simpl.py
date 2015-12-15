@@ -237,6 +237,7 @@ class Simpl:
                 print("No account found for '{}'\n\n".format(account))
 
     def _update_entry(self, terms):
+        # TODO Might want to clean this up and make it more clear
         username, password, comment = None, None, None
         try:
             # update <account>
