@@ -142,10 +142,19 @@ class Locker:
 
     def _decrypt_into_bank(self, ciphertext, IV):
         cipher = AES.new(self.key, AES.MODE_CBC, IV)
+        # Grab the last 32 bytes of ciphertext (the HMAC) and remove it.
+        hmac = ciphertext[-32:]
+        ciphertext = ciphertext[:-32]
         try:
             self.bank = cipher.decrypt(ciphertext)
-            # Remove the pad, as per PKCS#7, the byte is always the length of the pad.
-            self.bank = json.loads(self.bank[0:-self.bank[-1]].decode('utf8'))
+            # Remove the pad, as per PKCS#7
+            self.bank = self.bank[0:-self.bank[-1]]
+            # Verify the message with the HMAC
+            hmac_msg = HMAC.new(self.key, msg=self.bank, digestmod=SHA256).digest()
+            if hmac != hmac_msg:
+                raise ValueError('HMAC could not be verified.')
+            else:
+                self.bank = json.loads(self.bank.decode('utf8'))
         except ValueError as e:
             print("Simpl could not read the locker data. Perhaps you used an invalid key?")
             sys.exit()
