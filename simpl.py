@@ -5,7 +5,7 @@ import json
 from getpass import getpass
 
 from Crypto.Cipher import AES
-from Crypto.Hash import SHA256
+from Crypto.Hash import SHA256, HMAC
 from Crypto import Random
 
 from termcolor import colored
