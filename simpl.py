@@ -155,6 +155,8 @@ class Locker:
         cipher = AES.new(self.key, AES.MODE_CBC, Random.new().read(AES.block_size))
         with open(SIMPL_PATH, 'wb') as f:
             plain_text = json.dumps(self.bank).encode('utf8')
+            # Get the HMAC of Locker file
+            hmac = HMAC.new(self.key, msg=plain_text, digestmod=SHA256).digest()
             # Pad the data for AES CBC
             pad_length = AES.block_size - (len(plain_text) % AES.block_size)
             if pad_length == 0:
@@ -162,7 +164,7 @@ class Locker:
                 pad_length = AES.block_size
             pad = pad_length.to_bytes(1, 'big') * pad_length
             plain_text += pad
-            f.write(cipher.encrypt(cipher.IV+plain_text))
+            f.write(cipher.encrypt(cipher.IV+plain_text)+hmac)
         
 class Simpl:
     """ Main Simpl class. """
