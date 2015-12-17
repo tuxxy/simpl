@@ -146,16 +146,15 @@ class Locker:
         hmac = ciphertext[-32:]
         ciphertext = ciphertext[:-32]
         try:
-            self.bank = cipher.decrypt(ciphertext)
-            # Remove the pad, as per PKCS#7
-            self.bank = self.bank[0:-self.bank[-1]]
-            # Verify the message with the HMAC
-            hmac_msg = HMAC.new(self.key, msg=self.bank, digestmod=SHA256).digest()
+            # Verify message against the HMAC
+            hmac_msg = HMAC.new(self.key, msg=ciphertext, digestmod=SHA256).digest()
             if hmac != hmac_msg:
                 raise ValueError('HMAC could not be verified.')
             else:
-                self.bank = json.loads(self.bank.decode('utf8'))
-        except ValueError as e:
+                self.bank = cipher.decrypt(ciphertext)
+                # Remove the pad, as per PKCS#7, and load json
+                self.bank = json.loads(self.bank[0:-self.bank[-1]].decode('utf8'))
+        except ValueError:
             print("Simpl could not read the locker data. Perhaps you used an invalid key?")
             sys.exit()
 
