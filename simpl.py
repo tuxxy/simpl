@@ -8,6 +8,8 @@ from Crypto.Cipher import AES
 from Crypto.Hash import SHA256, HMAC
 from Crypto import Random
 
+import bcrypt
+
 from termcolor import colored
 
 # File path for the locker file
@@ -62,18 +64,27 @@ class CLI:
 
 class Locker:
     """ This class acts as the data structure to store passwords. """
-    key = None
+    key = None  # This key is used only to decrypt
+    bcrypt_salt = None
     bank = {}
     
+    # TODO: This can be improved by taking a filelike object instead of a string
     def __init__(self, data, key):
         """ Takes encrypted locker data from ~/.simpl and initializes a Locker. """
-        self.key = SHA256.new(data=key).digest()
+        key = SHA256.new(key).digest()
+        # bcrypt salt is always 29 bytes, get and remove from the data
         data_size = len(data)
-        if data_size >= AES.block_size:
-            IV = data[0:AES.block_size]
+        if data_size >= AES.block_size+29:
+            bcrypt_salt = data[:29]
+            data = data[29:]
+            key = SHA256.new(bcrypt.hashpw(key, bcrypt_salt)).digest()
+            IV = data[:AES.block_size]
             if data_size > AES.block_size:
                 ciphertext = data[AES.block_size:]
-                self._decrypt_into_bank(ciphertext, IV)
+                self._decrypt_into_bank(key, ciphertext, IV)
+        # Create a new key
+        self.bcrypt_salt = bcrypt.gensalt(16) # 2**16 == 65536 rounds
+        self.key = SHA256.new(bcrypt.hashpw(key, self.bcrypt_salt)).digest()
 
     def add(self, account, username, password, comment=''):
         if not account in self.bank.keys():
@@ -140,14 +151,14 @@ class Locker:
         if not entries:
             print("No occurances of '{}' found in the locker.\n\n".format(term))
 
-    def _decrypt_into_bank(self, ciphertext, IV):
-        cipher = AES.new(self.key, AES.MODE_CBC, IV)
+    def _decrypt_into_bank(self, key, ciphertext, IV):
+        cipher = AES.new(key, AES.MODE_CBC, IV)
         # Grab the last 32 bytes of ciphertext (the HMAC) and remove it.
         hmac = ciphertext[-32:]
         ciphertext = ciphertext[:-32]
         try:
             # Verify message against the HMAC
-            hmac_msg = HMAC.new(self.key, msg=ciphertext, digestmod=SHA256).digest()
+            hmac_msg = HMAC.new(key, msg=ciphertext, digestmod=SHA256).digest()
             if hmac != hmac_msg:
                 raise ValueError('HMAC could not be verified.')
             else:
@@ -173,7 +184,7 @@ class Locker:
             ciphertext = cipher.encrypt(plaintext)
             # Get the HMAC of Locker file
             hmac = HMAC.new(self.key, msg=ciphertext, digestmod=SHA256).digest()
-            f.write(cipher.IV+ciphertext+hmac)
+            f.write(self.bcrypt_salt+cipher.IV+ciphertext+hmac)
         
 class Simpl:
     """ Main Simpl class. """
