@@ -52,6 +52,7 @@ class CLI:
         print(error)
 
     def disp_help(self):
+        # TODO Clarify these by fixing usage patterns
         print("'help' - Displays this menu.")
         print("'exit' - Exits the program.")
         print("'add [[account_name] [username]]' - Adds entry to Locker.'")
@@ -69,6 +70,8 @@ class Locker:
     bank = {}
     
     # TODO: This can be improved by taking a filelike object instead of a string
+    # TODO: Maybe replace with a C-based library for bcrypt
+    # TODO: Look into Cryptography.io
     def __init__(self, data, key):
         """ Takes encrypted locker data from ~/.simpl and initializes a Locker. """
         key = SHA256.new(key).digest()
