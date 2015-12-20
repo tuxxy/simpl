@@ -188,6 +188,7 @@ class Locker:
             # Get the HMAC of Locker file
             hmac = HMAC.new(self.key, msg=ciphertext, digestmod=SHA256).digest()
             f.write(self.bcrypt_salt+cipher.IV+ciphertext+hmac)
+
         
 class Simpl:
     """ Main Simpl class. """
@@ -335,6 +336,7 @@ class Simpl:
         else:
             # Should never happen, but safety first!
             return False
+
 
 if __name__ == '__main__':
     # Instantiate main application handler class
