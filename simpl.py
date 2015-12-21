@@ -136,6 +136,10 @@ class Locker:
         else:
             raise KeyError('Account doesn\'t exist!')
 
+    def count_entropy(self, password):
+        """ Counts shannon entropy of password."""
+        print("Shannon Entropy count: {}".format(entropy.shannon_entropy(password)))
+
     def query(self, term):
         """ Searches for occurances of the term in the bank. """
         entries = []
@@ -224,6 +228,8 @@ class Simpl:
                 self._del_entry(terms)
             elif terms[0] in ['update', 'mod', 'modify', 'change']:
                 self._update_entry(terms)
+            elif terms[0] in ['entropy', 'shannon']:
+                self.locker.count_entropy(self.cli.sensitive_input('Enter a password: '))
             elif terms[0] in ['help', '?']:
                 self.cli.disp_help()
             elif terms[0] in ['exit', ':q', ':wq']:
