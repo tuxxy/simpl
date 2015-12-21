@@ -10,6 +10,8 @@ from Crypto import Random
 
 import bcrypt
 
+import entropy
+
 from termcolor import colored
 
 # File path for the locker file
