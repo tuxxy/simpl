@@ -1,10 +1,19 @@
 package main
 
-import "golang.org/x/crypto/ssh/terminal"
+import (
+    "golang.org/x/crypto/ssh/terminal"
+    "bufio"
+    "os"
+)
 
 type CLI struct {
     Input []byte
-    Term terminal.Terminal
+    Reader *bufio.Reader
+}
+
+func InitCLI() (*CLI) {
+    reader := bufio.NewReader(os.Stdin)
+    return &CLI{nil, reader}
 }
 
 func (c *CLI) GetKey() {
