@@ -48,3 +48,14 @@ func (c *CLI) ConfirmPrompt() (bool, error) {
         return false, errors.New("Input was invalid - try again.")
     }
 }
+
+func (c *CLI) DisplayHelp() {
+    fmt.Println("'help' - Displays this menu.")
+    fmt.Println("'exit' - Exits simpl.")
+    fmt.Println("'add [account_name] [username]' - Adds entry to Locker.'")
+    fmt.Println("'list' - Displays all the accounts and related comments in the Locker.")
+    fmt.Println("'cat [account_name]' - Displays all info from matching provided account.")
+    fmt.Println("'del [account_name]' - Deletes the entry matching the provided account.")
+    fmt.Println("'update [account_name] [[<attribute>=<value>],[<attribute>=<value>]...]' - Updates matching entry from provided account name.")
+    fmt.Println("'<query>' - Any string that doesn't match the commands. Searches for all related accounts and returns all the info.\n\n\n")
+}
