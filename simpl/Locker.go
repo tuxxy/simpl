@@ -8,9 +8,5 @@ type Entry struct {
 }
 
 type Locker struct {
-    Entries []Entry
-}
-
-func InitLocker() *Locker {
-
+    Entries *[]Entry
 }
