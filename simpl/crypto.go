@@ -29,7 +29,7 @@ func SanityCheck() bool {
         return false
     }
     if selfSum == string(body[:len(body)-1]) {
-        fmt.Println("Checksum verified from: https://raw.githubusercontent.com/tuxxy/simpl/go/CHECKSUM")
+        fmt.Println("Checksum verification SUCCESS!")
         return true
     } else {
         fmt.Println("Checksum verification FAILED! It is recommended to not continue until this verification succeeds with the checksum from: https://raw.githubusercontent.com/tuxxy/simpl/go/CHECKSUM")
