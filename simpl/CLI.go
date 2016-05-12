@@ -4,6 +4,7 @@ import (
     "golang.org/x/crypto/ssh/terminal"
     "bufio"
     "os"
+    "fmt"
 )
 
 type CLI struct {
@@ -16,12 +17,20 @@ func InitCLI() (*CLI) {
     return &CLI{nil, reader}
 }
 
-func (c *CLI) GetKey() {
-    // Can't put a value directly into the struct, see:
-    // https://github.com/golang/go/issues/6842
-    key, err := terminal.ReadPassword(0)
+func (c *CLI) SecureGetInput() {
+    fmt.Print(">> ")
+    data, err := terminal.ReadPassword(0)
     if err != nil {
         panic(err)
     }
-    c.Input = key[0:]
+    c.Input = data[0:]
+}
+
+func (c *CLI) GetInput() {
+    fmt.Print(">> ")
+    data, err := c.Reader.ReadBytes('\n')
+    if err != nil {
+        panic(err)
+    }
+    c.Input = data[0:]
 }
