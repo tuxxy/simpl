@@ -45,3 +45,20 @@ func DeriveKey(passphrase, salt []byte) []byte {
     // Return the derived key
 	return key
 }
+
+func InitCryptor(key, nonce []byte) *Cryptor {
+    block, err := aes.NewCipher(key[:])
+    if err != nil {
+        ZeroData(key)
+        panic(err)
+    }
+    if nonce == nil {
+        // Generate a random 96-bit nonce
+        Nonce := getRandBytes(12)
+    } else {
+        Nonce := copy(nonce)
+        ZeroData(nonce)
+    }
+    GCMCipher, err := cipher.NewGCM(block)
+    return &Cryptor{GCMCipher, Nonce}
+}
