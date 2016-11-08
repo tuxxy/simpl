@@ -46,7 +46,16 @@ func DeriveKey(passphrase, salt []byte) []byte {
 	return key
 }
 
-func InitCryptor(key, nonce []byte) *Cryptor {
+func InitCryptor(key, salt, nonce []byte) *Cryptor {
+    // Derive the key
+    derivedKey := make([]byte, 32)
+    derivedKey = DeriveKey(key, salt)
+
+    // Wipe unused data
+    ZeroData(key)
+    ZeroData(salt)
+
+    // Create cipher
     block, err := aes.NewCipher(key[:])
     if err != nil {
         ZeroData(key)
