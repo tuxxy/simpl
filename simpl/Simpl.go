@@ -22,10 +22,16 @@ func InitSimpl() *Simpl {
     CheckErr(os.Chdir(usr.HomeDir))
 
     // If the file doesn't exist, this is the first time running!
+    is_firstRun := false
     if _, err := os.Stat(".simpl"); os.IsNotExist(err) {
+        is_firstRun = true
         lockerFile := cli.FirstRunSetup()
+    } else {
+        lockerFile, err = os.Open(".simpl")
+        CheckErr(err)
     }
-    locker := InitLocker(lockerFile)
+    defer lockerFile.Close()
+    locker := InitLocker(lockerFile, cli, is_firstRun)
 
     return &Simpl{cli}
 }
