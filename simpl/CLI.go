@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"golang.org/x/crypto/ssh/terminal"
 	"os"
-    "os/user"
 	"strings"
 )
 
