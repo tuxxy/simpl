@@ -56,17 +56,18 @@ func InitCryptor(key, salt, nonce []byte) *Cryptor {
     ZeroData(salt)
 
     // Create cipher
-    block, err := aes.NewCipher(key[:])
+    block, err := aes.NewCipher(derivedKey[:])
     if err != nil {
-        ZeroData(key)
+        ZeroData(derivedKey)
         panic(err)
     }
     // Look into wiping key after block creation
+    var Nonce []byte
     if nonce == nil {
         // Generate a random 96-bit nonce
-        Nonce := getRandBytes(12)
+        Nonce = getRandBytes(12)
     } else {
-        Nonce := make([]byte, 12)
+        Nonce = make([]byte, 12)
         copy(Nonce, nonce)
         ZeroData(nonce)
     }
@@ -75,19 +76,19 @@ func InitCryptor(key, salt, nonce []byte) *Cryptor {
 }
 
 func (c *Cryptor) EncryptData(data []byte) {
-    _, err := c.GCMCipher.Seal(data[:0], Nonce, data, nil)
+    err := c.GCMCipher.Seal(data[:0], c.Nonce, data, nil)
     if err != nil {
         ZeroData(data)
-        ZeroData(Nonce)
+        ZeroData(c.Nonce)
         panic(err)
     }
 }
 
 func (c *Cryptor) DecryptData(data []byte) {
-    _, err := c.GCMCipher.Open(data[:0], Nonce, data, nil)
+    _, err := c.GCMCipher.Open(data[:0], c.Nonce, data, nil)
     if err != nil {
         ZeroData(data)
-        ZeroData(Nonce)
+        ZeroData(c.Nonce)
         panic(err)
     }
 }

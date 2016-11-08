@@ -73,11 +73,11 @@ func InitLocker(lockerFile *os.File, cli *CLI, is_firstRun bool) *Locker {
     } else {
         // Get nonce from LockerFile
         nonce = make([]byte, 12)
-        lockerFile.Read(nonce)
+        LockerFile.Read(nonce)
 
         // Get salt from LockerFile
         salt = make([]byte, 32)
-        lockerFile.Read(salt)
+        LockerFile.Read(salt)
 
         // Get key from user
         fmt.Println("Enter Encryption key.")
@@ -86,5 +86,7 @@ func InitLocker(lockerFile *os.File, cli *CLI, is_firstRun bool) *Locker {
         ZeroData(Cli.Input)
     }
     // Create cipher
-    Cipher := InitCryptor(key, nonce)
+    Cipher := InitCryptor(key, salt, nonce)
+
+    return &Locker{Cli, LockerFile, nil, Cipher}
 }
