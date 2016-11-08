@@ -73,6 +73,10 @@ func InitLocker(lockerFile *os.File, cli *CLI is_firstRun bool) *Locker {
         nonce = make([]byte, 12)
         lockerFile.Read(nonce)
 
+        // Get salt from LockerFile
+        salt = make([]byte, 32)
+        lockerFile.Read(salt)
+
         // Get key from user
         fmt.Println("Enter Encryption key.")
         Cli.SecureGetInput()
