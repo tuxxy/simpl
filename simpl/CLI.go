@@ -69,6 +69,9 @@ func (c *CLI) ConfirmPrompt() (bool, error) {
 }
 
 func (c *CLI) ConfirmPromptLoop() (bool) {
+    var is_cont bool
+    var err error
+
     for is_cont, err = c.ConfirmPrompt(); !is_cont; is_cont, err = c.ConfirmPrompt() {
         if err != nil {
             fmt.Println("Invalid choice!")
