@@ -82,3 +82,12 @@ func (c *Cryptor) EncryptData(data []byte) {
         panic(err)
     }
 }
+
+func (c *Cryptor) DecryptData(data []byte) {
+    _, err := c.GCMCipher.Open(data[:0], Nonce, data, nil)
+    if err != nil {
+        ZeroData(data)
+        ZeroData(Nonce)
+        panic(err)
+    }
+}
