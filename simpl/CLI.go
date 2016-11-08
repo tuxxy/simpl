@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"golang.org/x/crypto/ssh/terminal"
 	"os"
+    "os/user"
 	"strings"
 )
 
@@ -14,27 +15,36 @@ type CLI struct {
 	Reader *bufio.Reader
 }
 
+func CheckErr(e error) {
+    if e != nil {
+        panic(e)
+    }
+}
+
 func InitCLI() *CLI {
 	reader := bufio.NewReader(os.Stdin)
 	return &CLI{nil, reader}
 }
 
+func (c *CLI) FirstRunSetup() *os.File {
+    f, err := os.Create(".simpl")
+    CheckErr(err)
+}
+
 func (c *CLI) SecureGetInput() {
 	fmt.Print(">> ")
 	data, err := terminal.ReadPassword(0)
-	if err != nil {
-		panic(err)
-	}
-	c.Input = data[0:]
+    CheckErr(err)
+
+	c.Input = data[:]
 }
 
 func (c *CLI) GetInput() {
 	fmt.Print(">> ")
 	data, err := c.Reader.ReadBytes('\n')
-	if err != nil {
-		panic(err)
-	}
-	c.Input = data[0:]
+    CheckErr(err)
+
+	c.Input = data[:]
 }
 
 func (c *CLI) ConfirmPrompt() (bool, error) {
@@ -42,9 +52,11 @@ func (c *CLI) ConfirmPrompt() (bool, error) {
 	choice := strings.ToLower(string(c.Input))
 	switch choice {
 	case "y", "yes":
-		return true
+		return true, nil
 	case "n", "no":
-		return false
+		return false, nil
+    default:
+        return false, errors.New("Invalid choice")
 	}
 }
 

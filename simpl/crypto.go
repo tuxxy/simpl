@@ -1,8 +1,8 @@
 package main
 
 import (
-	"crypto/bcrypt"
-	"crypto/sha512"
+	"golang.org/x/crypto/scrypt"
+    "crypto/rand"
 )
 
 func ZeroData(data []byte) {
@@ -13,12 +13,28 @@ func ZeroData(data []byte) {
 	}
 }
 
-func DeriveKey(passphrase []byte) []byte {
-	// I've found that 17 rounds is a reasonable wait for assured security.
-	key, err := bcrypt.GenerateFromPassword(passphrase[:], 17)
+func getRandBytes(n int) []byte {
+    // Returns a byte array filled with n random bytes
+    data := make([]byte, n)
+    _, err := rand.Read(data)
+    if err != nil {
+        panic(err)
+    }
+    return data
+}
+
+func getRandSalt() []byte {
+    // Returns a 32-byte random salt
+    return getRandBytes(32)
+}
+
+func DeriveKey(passphrase, salt []byte) []byte {
+    // Best scrypt settings for modern use -- N=2^22, r=4, p=1
+	key, err := scrypt.Key(passphrase, salt, 4194304, 4, 1, 32)
 	if err != nil {
-		ZeroData(hashPass[:])
+		ZeroData(passphrase[:])
 		panic(err)
 	}
-	return key[:]
+    // Return the derived key
+	return key
 }

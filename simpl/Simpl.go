@@ -4,14 +4,29 @@ import (
     "strings"
     "fmt"
     "os"
+    "os/user"
 )
 
 type Simpl struct {
     cli *CLI
+    locker *Locker
 }
+
 
 func InitSimpl() *Simpl {
     cli := InitCLI()
+
+    // Change dir to the home directory of the current user
+    usr, err := user.Current()
+    CheckErr(err)
+    CheckErr(os.Chdir(usr.HomeDir))
+
+    // If the file doesn't exist, this is the first time running!
+    if _, err := os.Stat(".simpl"); os.IsNotExist(err) {
+        lockerFile := cli.FirstRunSetup()
+    }
+    locker := InitLocker(lockerFile)
+
     return &Simpl{cli}
 }
 
