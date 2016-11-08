@@ -56,7 +56,8 @@ func InitCryptor(key, nonce []byte) *Cryptor {
         // Generate a random 96-bit nonce
         Nonce := getRandBytes(12)
     } else {
-        Nonce := copy(nonce)
+        Nonce := make([]byte, 12)
+        copy(Nonce, nonce)
         ZeroData(nonce)
     }
     GCMCipher, err := cipher.NewGCM(block)
