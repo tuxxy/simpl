@@ -23,9 +23,12 @@ func InitLocker(lockerFile *os.File, cli *CLI is_firstRun bool) *Locker {
     LockerFile := lockerFile
     var key []byte
     var nonce []byte
+    var salt []byte
 
     if is_firstRun {
         nonce = nil
+        salt = getRandBytes(32)
+
         fmt.Println("Enter a secure key for encryption.\nIf you forget this, you will lose access to your data.")
         Cli.SecureGetInput()
 
