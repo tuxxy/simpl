@@ -3,6 +3,7 @@ package main
 import (
     "os"
     "fmt"
+    "bytes"
 )
 
 type Entry struct {
@@ -46,7 +47,7 @@ func InitLocker(lockerFile *os.File, cli *CLI, is_firstRun bool) *Locker {
         copy(keyVerify, Cli.Input)
         ZeroData(Cli.Input)
 
-        for key != keyVerify {
+        for bytes.Compare(key, keyVerify) != 0 {
             ZeroData(key)
             ZeroData(keyVerify)
 
