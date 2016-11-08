@@ -28,7 +28,7 @@ func InitCLI() *CLI {
 func (c *CLI) FirstRunSetup() *os.File {
     fmt.Println("Simpl has detected this is the first run!\nWe will now setup your Simpl Locker file!")
     fmt.Println("Would you like to continue? y/n")
-    is_cont := cli.ConfirmPromptLoop()
+    is_cont := c.ConfirmPromptLoop()
     if !is_cont {
         fmt.Println("See ya!")
         os.Exit(0)
@@ -69,7 +69,7 @@ func (c *CLI) ConfirmPrompt() (bool, error) {
 }
 
 func (c *CLI) ConfirmPromptLoop() (bool) {
-    for is_cont, err = cli.ConfirmPrompt(); !is_cont; is_cont, err = cli.ConfirmPrompt() {
+    for is_cont, err = c.ConfirmPrompt(); !is_cont; is_cont, err = c.ConfirmPrompt() {
         if err != nil {
             fmt.Println("Invalid choice!")
             continue
