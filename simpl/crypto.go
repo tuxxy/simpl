@@ -73,3 +73,12 @@ func InitCryptor(key, salt, nonce []byte) *Cryptor {
     GCMCipher, err := cipher.NewGCM(block)
     return &Cryptor{GCMCipher, Nonce}
 }
+
+func (c *Cryptor) EncryptData(data []byte) {
+    _, err := c.GCMCipher.Seal(data[:0], Nonce, data, nil)
+    if err != nil {
+        ZeroData(data)
+        ZeroData(Nonce)
+        panic(err)
+    }
+}
