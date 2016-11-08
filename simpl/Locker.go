@@ -18,7 +18,7 @@ type Locker struct {
     Cipher *Cryptor
 }
 
-func InitLocker(lockerFile *os.File, cli *CLI is_firstRun bool) *Locker {
+func InitLocker(lockerFile *os.File, cli *CLI, is_firstRun bool) *Locker {
     Cli := cli
     LockerFile := lockerFile
     var key []byte
