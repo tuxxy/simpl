@@ -8,7 +8,8 @@ import (
 )
 
 type Cryptor struct {
-    GCMCipher *cipher.AEAD
+    GCMCipher cipher.AEAD
+    Nonce []byte
 }
 
 func ZeroData(data []byte) {
