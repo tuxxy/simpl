@@ -61,6 +61,7 @@ func InitCryptor(key, salt, nonce []byte) *Cryptor {
         ZeroData(key)
         panic(err)
     }
+    // Look into wiping key after block creation
     if nonce == nil {
         // Generate a random 96-bit nonce
         Nonce := getRandBytes(12)
