@@ -31,6 +31,13 @@ func (c *CLI) FirstRunSetup() *os.File {
     CheckErr(err)
 
     fmt.Println("Simpl has detected this is the first run!\nWe will now setup your Simpl Locker file!")
+
+    fmt.Println("Would you like to continue? y/n")
+    is_cont := cli.ConfirmPromptLoop()
+    if !is_cont {
+        fmt.Println("See ya!")
+        os.Exit(0)
+    }
 }
 
 func (c *CLI) SecureGetInput() {
