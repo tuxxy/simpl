@@ -14,13 +14,8 @@ func ZeroData(data []byte) {
 }
 
 func DeriveKey(passphrase []byte) []byte {
-	// The maximum pass length is 72 chars, thus all passowrds will benefit
-	// from a sha512 hash for maximum entropy allowance.
-	// TODO Get a random 16 bit salt
-	hashPass := sha512.New().Sum(passphrase[:])
-	go ZeroData(passphrase[:])
 	// I've found that 17 rounds is a reasonable wait for assured security.
-	key, err := bcrypt.GenerateFromPassword(hashPass[:], 17)
+	key, err := bcrypt.GenerateFromPassword(passphrase[:], 17)
 	if err != nil {
 		ZeroData(hashPass[:])
 		panic(err)
