@@ -40,7 +40,6 @@ func (c *CLI) FirstRunSetup() *os.File {
 }
 
 func (c *CLI) SecureGetInput() {
-	fmt.Print(">> ")
 	data, err := terminal.ReadPassword(0)
     CheckErr(err)
 
