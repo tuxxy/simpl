@@ -29,6 +29,8 @@ func InitCLI() *CLI {
 func (c *CLI) FirstRunSetup() *os.File {
     f, err := os.Create(".simpl")
     CheckErr(err)
+
+    fmt.Println("Simpl has detected this is the first run!\nWe will now setup your Simpl Locker file!")
 }
 
 func (c *CLI) SecureGetInput() {
