@@ -58,6 +58,7 @@ func (c *CLI) GetInput() {
 func (c *CLI) ConfirmPrompt() (bool, error) {
 	c.GetInput()
 	choice := strings.ToLower(string(c.Input))
+    choice = strings.Trim(choice, "\n ")
 	switch choice {
 	case "y", "yes":
 		return true, nil
