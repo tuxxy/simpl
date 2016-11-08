@@ -27,17 +27,17 @@ func InitCLI() *CLI {
 }
 
 func (c *CLI) FirstRunSetup() *os.File {
-    f, err := os.Create(".simpl")
-    CheckErr(err)
-
     fmt.Println("Simpl has detected this is the first run!\nWe will now setup your Simpl Locker file!")
-
     fmt.Println("Would you like to continue? y/n")
     is_cont := cli.ConfirmPromptLoop()
     if !is_cont {
         fmt.Println("See ya!")
         os.Exit(0)
     }
+    file, err := os.Create(".simpl")
+    CheckErr(err)
+
+    return file
 }
 
 func (c *CLI) SecureGetInput() {

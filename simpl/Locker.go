@@ -12,9 +12,16 @@ type Entry struct {
 }
 
 type Locker struct {
+    Cli *CLI
     LockerFile *os.File
     Entries *[]Entry
 }
 
-func InitLocker(lockerFile *os.File) *Locker {
+func InitLocker(lockerFile *os.File, cli *CLI is_firstRun bool) *Locker {
+    Cli := cli
+    LockerFile := lockerFile
+
+    if is_firstRun {
+        // Create a cipher
+    }
 }
