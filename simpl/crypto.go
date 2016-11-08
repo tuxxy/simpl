@@ -3,7 +3,13 @@ package main
 import (
 	"golang.org/x/crypto/scrypt"
     "crypto/rand"
+    "crypto/aes"
+    "crypto/cipher"
 )
+
+type Cryptor struct {
+    GCMCipher *cipher.AEAD
+}
 
 func ZeroData(data []byte) {
 	// Zeros the buffer

@@ -15,6 +15,7 @@ type Locker struct {
     Cli *CLI
     LockerFile *os.File
     Entries *[]Entry
+    Cipher *Cryptor
 }
 
 func InitLocker(lockerFile *os.File, cli *CLI is_firstRun bool) *Locker {
