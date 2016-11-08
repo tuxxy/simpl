@@ -62,6 +62,17 @@ func (c *CLI) ConfirmPrompt() (bool, error) {
 	}
 }
 
+func (c *CLI) ConfirmPromptLoop() (bool) {
+    for is_cont, err = cli.ConfirmPrompt(); !is_cont; is_cont, err = cli.ConfirmPrompt() {
+        if err != nil {
+            fmt.Println("Invalid choice!")
+            continue
+        }
+        return is_cont
+    }
+    return is_cont
+}
+
 func (c *CLI) DisplayHelp() {
 	fmt.Println("'help' - Displays this menu.")
 	fmt.Println("'exit' - Exits simpl.")
